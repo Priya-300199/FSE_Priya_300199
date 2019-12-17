@@ -1,0 +1,77 @@
+<form #form="ngForm"  autocomplete="off">
+    <div class="container">
+    <br>
+    <div class = "form-row">
+        <div class = "form-group col-md-4">
+            <label>Project Name:</label>
+            <input type ="text" name = "ProjectName" #ProjectName ="ngModel" [(ngModel)]="ProjectNm" class="form-control col-sm-10" [readonly]="isReadOnly" required>
+            <input type="hidden" name="ProjectID" #ProjectID="ngModel" [(ngModel)]="service.taskData.ProjectID" class="form-control col-sm-10">                                            
+            <div class="validation-error" *ngIf="ProjectName.invalid && ProjectName.touched ">This field is required.</div>
+        </div>
+        <div class = "form-group col-md-4">                       
+            <input type="button" class="col-sm-6"  value="Select Project" (click)="openModal('custom-modal-project')"> <br> <br>
+            <input type="button" class="col-sm-6" value="Reset" (click)="ClearProject()">
+        </div>
+    </div>
+    <div class='container'>
+        <label class = "col-sm-2 col-form-label"><strong>Tasks:</strong></label><br>
+        <div class="container">
+            <label class = "col-sm-2 col-form-label"><strong>Sort by:</strong></label>&nbsp;&nbsp;
+            <input type="button" value="Start Date" (click)="Sort(service.taskData.ProjectID,'StartDate')"> &nbsp;&nbsp;
+            <input type="button" value="End Date" (click)="Sort(service.taskData.ProjectID,'EndDate')"> &nbsp;&nbsp;
+            <input type="button" value="Priority" (click)="Sort(service.taskData.ProjectID,'Priority')"> &nbsp;&nbsp;
+            <input type="button" value="Completed" (click)="Sort(service.taskData.ProjectID,'Status')"> &nbsp;&nbsp;
+        </div><br>
+    </div>
+    <div class="container">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+                <th>Task</th>
+                <th>Parent Task</th>                
+                <th>Priority</th>
+                <th>Start_Date</th>
+                <th>End_Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tsk of service.taskList">
+                    <td>{{tsk.TaskName}}</td>
+                    <td>{{tsk.ParentTaskID}}</td>
+                    <td>{{tsk.Priority}}</td>
+                    <td>{{tsk.StartDate | date: 'dd-MM-yyyy' }}</td>
+                    <td>{{tsk.EndDate | date: 'dd-MM-yyyy'}}</td>
+                    <td>{{tsk.Status}}</td>
+                    <td><input type="button" value="Edit" (click)="UpdateTask(tsk)"><br><br><input type="button" value="End Task" (click)="EndTask(tsk.TaskID)"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <w3-modal id="custom-modal-project">
+            <div class="container">
+                <h1>Projects</h1>
+                <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                        <th>ProjectID</th>
+                        <th>ProjectName</th>                
+                        <th>StartDate</th>
+                        <th>EndDate</th>
+                        <th>Priority</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor = "let prj of service.projectList"> 
+                            <td><a href="javascript: void(0)" (click)="SelectProject(prj.ProjectID, prj.ProjectName)"> {{prj.ProjectID}}</a></td>                
+                            <td>{{prj.ProjectName}}</td>
+                            <td>{{prj.StartDate}}</td>
+                            <td>{{prj.EndDate}}</td>
+                            <td>{{prj.Priority}}</td>                                    
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button (click)="closeModal('custom-modal-project')">Close</button>    
+            </w3-modal>
+    </div>
+
+</form>

@@ -1,0 +1,114 @@
+<form #form="ngForm" (submit)="onSubmit(form)"  autocomplete="off" >
+    <div class="container">
+        <br>
+        <input type ="hidden" name="ProjectID" #ProjectID="ngModel" [(ngModel)] ="service.formData.ProjectID"  > 
+    <div class = "form-group">
+        <label>Project Name:</label> 
+        
+        <input  name="ProjectName" #ProjectName="ngModel" [(ngModel)]="service.formData.ProjectName" class="form-control col-sm-4" required >
+        <div class="validation-error" *ngIf="ProjectName.invalid && ProjectName.touched">This field is required.</div>
+    </div>
+    <div class = "form-group">
+        <input type="checkbox" name="ChkDt" #ChkDt="ngModel" [(ngModel)]="isChecked" (change)="statuschange($event)">&nbsp;Set Start and End Date
+    </div>
+    <div class = "form-row">
+
+        <div class = "form-group col-md-4">
+            <label>Start Date:</label>            
+            <input type="date" id="startDt"  name="StartDate" #StartDate="ngModel" [(ngModel)]="service.formData.StartDate"  class="form-control col-sm-10"  [readonly]="isReadOnly" required >            
+            <div class="validation-error" *ngIf="StartDate.invalid && StartDate.touched">This field is required.</div>
+        </div>
+        <div class = "form-group col-md-4">
+            <label>End Date:</label>
+            <input type="date" name="EndDate" #EndDate="ngModel" [(ngModel)]="service.formData.EndDate" class="form-control col-sm-10" [readonly]="isReadOnly" required>            
+            <div class="validation-error" *ngIf="EndDate.invalid && EndDate.touched">This field is required.</div>
+        </div>
+    </div>
+
+    <div class = "form-group">
+        <label>Priority:</label>
+        <input type="range" name="Priority" #Priority="ngModel" [(ngModel)]="service.formData.Priority" class="form-control col-sm-4" id="rngPriority" min ="0" max ="30">       
+    </div>
+    <div class = "form-row">
+            
+            <div class = "form-group col-md-4">
+            <label>Manager:</label>
+            <input type ="text" name = "UserNm" #UserNm ="ngModel" [ngModel]="UserName" class="form-control col-sm-10" [readonly]="is_ReadOnly" required>
+            <input type="hidden" name="UserID" #UserID="ngModel" [(ngModel)]="service.formData.UserID" class="form-control col-sm-10">             
+            <div class="validation-error" *ngIf="UserNm.invalid && UserNm.touched ">This field is required.</div>
+            </div>
+            <div class = "form-group col-md-4">                       
+            <input type="button" class="col-sm-6"  value="Select User" (click)="openModal('custom-modal-user')">        
+            </div>
+    </div>    
+    <w3-modal id="custom-modal-user">
+        <div class="container">
+            <h1>Users</h1>
+            <table class="table table-hover table-bordered table-striped">
+                <thead>
+                <th>UserID</th>
+                <th>FirstName</th>                
+                <th>LastName</th>
+            </thead>
+            <tbody>
+                <tr *ngFor = "let usr of service.userList"> 
+                    <td><a href="javascript: void(0)" (click)="SelectUser(usr.UserID, usr.FirstName, usr.LastName)"> {{usr.UserID}}</a></td>                
+                    <td>{{usr.FirstName}}</td>
+                    <td>{{usr.LastName}}</td>                                        
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        <button (click)="closeModal('custom-modal-user')">Close</button>
+
+    </w3-modal>
+    
+
+    <div class="form-row">
+        <div class="form-group col-md-4"></div>
+        <div class = "form-group col-md-4"><br>            
+            <input type="submit" class="col-sm-6" id="btnAddProject"  value="{{ButtonName}}" [disabled]="form.invalid"> &nbsp;&nbsp;                      
+        </div>
+        <div class = "form-group col-md-4"><br>
+                <input type="button" class="col-sm-6" id="btnCancel" value="Reset" (click)="ResetForm()">            
+        </div>
+    </div>                
+</div>
+
+<div class='container'>
+<label class = "col-sm-2 col-form-label"><strong>Projects:</strong></label><br><br>
+<div class="container">
+        <label class = "col-sm-2 col-form-label"><strong>Sort by:</strong></label>&nbsp;&nbsp;
+        <input type="button" value="Start Date" (click)="Sort('StartDate')"> &nbsp;&nbsp;
+        <input type="button" value="End Date" (click)="Sort('EndDate')"> &nbsp;&nbsp;
+        <input type="button" value="Priority" (click)="Sort('Priority')"> &nbsp;&nbsp;
+        <input type="button" value="Completed" (click)="Sort('Status')"> &nbsp;&nbsp;
+</div><br><br>
+
+<div class="container">
+    <table class="table table-hover table-bordered table-striped">
+        <thead>
+        <th>Project</th>
+        <th>No_of_Tasks</th>
+        <th>Completed</th>
+        <th>Priority</th>
+        <th>Start_Date</th>
+        <th>End_Date</th>
+        <th>Action</th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let prj of service.projectList"  >
+            <td>{{prj.ProjectName}}</td>
+            <td>{{prj.TaskCount}}</td>
+            <td>{{prj.CompletedTask}}</td>
+            <td>{{prj.Priority}}</td>
+            <td>{{prj.StartDate | date: 'dd-MM-yyyy' }}</td>
+            <td>{{prj.EndDate | date: 'dd-MM-yyyy'}}</td>
+            <td><input type="button" value="Update" (click)="UpdateProject(prj)"><br><br><input type="button" value="Suspend" (click)="SuspendProject(prj.ProjectID)"></td>
+        </tr>
+    </tbody>
+    </table>
+</div>
+</div>
+</form> 
+ 

@@ -1,0 +1,143 @@
+<form #form="ngForm" (submit)="onSubmit(form)"  autocomplete="off" >
+    <div class="container">
+        <br>
+        <input type ="hidden" name="TaskID" #TaskID="ngModel" [(ngModel)] ="CTask.TaskID"  > 
+        <div class = "form-row">
+            <div class = "form-group col-md-4">
+                <label>Project Name:</label>
+                <input type ="text" name = "ProjectName" #ProjectName ="ngModel" [(ngModel)]="ProjectNm" class="form-control col-sm-10" [disabled] = "isdisabled" [readonly]="isReadOnly" required>
+                <input type="hidden" name="ProjectID" #ProjectID="ngModel" [(ngModel)]="CTask.ProjectID" class="form-control col-sm-10">                                            
+                <div class="validation-error" *ngIf="ProjectName.invalid && ProjectName.touched ">This field is required.</div>
+            </div>
+            <div class = "form-group col-md-4">                       
+                <input type="button" class="col-sm-6"  value="Select Project" (click)="openModal('custom-modal-project')" [disabled]="isdisabled">        
+            </div>
+        </div>
+        <div class = "form-group">
+            <label>Task Name:</label> 
+            <input  name="TaskName" #TaskName="ngModel" [(ngModel)]="CTask.TaskName" class="form-control col-sm-4" required >
+            <div class="validation-error" *ngIf="TaskName.invalid && TaskName.touched">This field is required.</div>
+        </div>
+        <div class = "form-group">
+            <label>Status:</label>
+            <select class="form-control col-sm-4" name="Status" #Status="ngModel" [(ngModel)]="CTask.Status" [disabled]="isdisabled">
+                <option value ="" disabled>Choose Status</option>
+                <option>Assigned</option>
+                <option>InProgress</option>
+                <option>Completed</option>
+            </select>
+        </div> 
+        <div class = "form-group">
+            <input type="checkbox" name="ChkParentTK" #ChkParentTK="ngModel" [(ngModel)]="isChecked" (change)="statuschange($event)">&nbsp;Parent Task
+        </div>
+        <div class = "form-group">
+            <label>Priority:</label>
+            <input type="range" [disabled] = "isdisabled" name="Priority" #Priority="ngModel" [(ngModel)]="CTask.Priority" class="form-control col-sm-4" id="rngPriority" min ="0" max ="30">       
+        </div>
+        <div class = "form-row">
+            <div class = "form-group col-md-4">
+                <label>Parent Task:</label>
+                <input type ="text" [disabled] = "isdisabled" [readonly] = "isReadOnly" name = "ParentTask" #ParentTask ="ngModel" [(ngModel)]="parentTaskNM" class="form-control col-sm-10">
+                <input type="hidden"  name="ParentTaskID" #ParentTaskID="ngModel" [(ngModel)]="CTask.ParentTaskID" class="form-control col-sm-10">                                                            
+            </div>
+            <div class = "form-group col-md-4">                       
+                <input type="button" [disabled] = "isdisabled" class="col-sm-6"  value="Select Task" (click)="openModal('custom-modal-task')">        
+            </div>
+        </div>
+        <br>
+        <div class = "form-row">
+            <div class = "form-group col-md-4">
+                <label>Start Date:</label>            
+                <input type="date" [disabled] = "isdisabled"  id="startDt"  name="StartDate" #StartDate="ngModel" [(ngModel)]="CTask.StartDate"  class="form-control col-sm-10" required>            
+                <div class="validation-error" *ngIf="StartDate.invalid && StartDate.touched">This field is required.</div>
+            </div>
+            <div class = "form-group col-md-4">
+                <label>End Date:</label>
+                <input type="date" [disabled] = "isdisabled" name="EndDate" #EndDate="ngModel" [(ngModel)]="CTask.EndDate" class="form-control col-sm-10"  required>            
+                <div class="validation-error" *ngIf="EndDate.invalid && EndDate.touched">This field is required.</div>
+            </div>
+        </div><br>
+        <div class = "form-row">
+            <div class = "form-group col-md-4">
+                <label>User:</label>
+                <input type ="text" [disabled] = "isdisabled"  name = "UserNm" #UserNm ="ngModel" [(ngModel)]="UserName" class="form-control col-sm-10" [readonly]="isReadOnly" required>
+                <input type="hidden" name="UserID" #UserID="ngModel" [(ngModel)]="CTask.UserID" class="form-control col-sm-10">             
+                <div class="validation-error" *ngIf="UserNm.invalid && UserNm.touched ">This field is required.</div>
+            </div>
+            <div class = "form-group col-md-4">                       
+                <input type="button" [disabled] = "isdisabled" class="col-sm-6"  value="Select User" (click)="openModal('custom-modal-user')">        
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4"></div>
+            <div class = "form-group col-md-4"><br>                
+                <input type="submit" class="col-sm-6" id="btnAddProject"  value="{{ButtonName}}" [disabled]="form.invalid"> &nbsp;&nbsp;                      
+            </div>
+            <div class = "form-group col-md-4"><br>
+                <input type="button" class="col-sm-6" id="btnCancel" value="Cancel" (click)="ResetForm()">            
+            </div>
+        </div>
+    </div>
+    <w3-modal id="custom-modal-project">
+        <div class="container">
+            <h1>Projects</h1>
+            <table class="table table-hover table-bordered table-striped">
+                <thead>
+                    <th>ProjectID</th>
+                    <th>ProjectName</th>                
+                    <th>StartDate</th>
+                    <th>EndDate</th>
+                    <th>Priority</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor = "let prj of service.projectList"> 
+                        <td><a href="javascript: void(0)" (click)="SelectProject(prj.ProjectID, prj.ProjectName)"> {{prj.ProjectID}}</a></td>                
+                        <td>{{prj.ProjectName}}</td>
+                        <td>{{prj.StartDate}}</td>
+                        <td>{{prj.EndDate}}</td>
+                        <td>{{prj.Priority}}</td>                                    
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <button (click)="closeModal('custom-modal-project')">Close</button>    
+        </w3-modal>
+        <w3-modal id="custom-modal-task">
+            <div class="container">
+                <h1>Tasks</h1>
+                <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                        <th>ParentTaskID</th>
+                        <th>ParentTaskName</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor = "let ptsk of service.parentTaskList"> 
+                            <td><a href="javascript: void(0)" (click)="SelectTask(ptsk.ParentTaskID, ptsk.ParentTaskName)"> {{ptsk.ParentTaskID}}</a></td>                
+                            <td>{{ptsk.ParentTaskName}}</td>                                
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button (click)="closeModal('custom-modal-task')">Close</button>    
+        </w3-modal>
+        <w3-modal id="custom-modal-user">
+            <div class="container">
+                <h1>Users</h1>
+                <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                        <th>UserID</th>
+                        <th>FirstName</th>                
+                        <th>LastName</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor = "let usr of service.userList"> 
+                            <td><a href="javascript: void(0)" (click)="SelectUser(usr.UserID, usr.FirstName, usr.LastName)"> {{usr.UserID}}</a></td>                
+                            <td>{{usr.FirstName}}</td>
+                            <td>{{usr.LastName}}</td>                                        
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button (click)="closeModal('custom-modal-user')">Close</button>
+        </w3-modal>
+</form>

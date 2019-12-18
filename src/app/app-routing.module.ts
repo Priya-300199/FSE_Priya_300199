@@ -6,7 +6,7 @@ import { UsersComponent } from './users/users.component';
 import { ViewTaskComponent } from './view-task/view-task.component';
 
 const routes: Routes = [
-  // {path: '', redirectTo: 'Project', pathMatch: 'full'},
+  {path: '', redirectTo: 'User', pathMatch: 'full'},
   {path: 'Project',component:ProjectComponent},
   {path: 'Task/:id',component:TaskComponent},
   {path: 'User',component:UsersComponent},

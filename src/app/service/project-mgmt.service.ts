@@ -64,10 +64,7 @@ export class ProjectMGMTService {
 
   getUserList()
   { 
-    const hdrs = new  HttpHeaders();
-    hdrs.append("Access-Control-Allow-Origin","*");
-    hdrs.append("Access-Control-Allow-Headers","*");
-    hdrs.append("Access-Control-Allow-Methods","*");
+    
     this.http.get(this.rootURL + '/Users',{headers: hdrs}).toPromise().then(res => this.userList=res as Users[]);
   }
 

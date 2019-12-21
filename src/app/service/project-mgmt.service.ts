@@ -65,7 +65,7 @@ export class ProjectMGMTService {
   getUserList()
   { 
     
-    this.http.get(this.rootURL + '/Users',{headers: hdrs}).toPromise().then(res => this.userList=res as Users[]);
+    this.http.get(this.rootURL + '/Users').toPromise().then(res => this.userList=res as Users[]);
   }
 
   getUser(id : number)

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 import { ProjectMGMT, Users, Task, ParentTask, ProjectTskVW } from './project-mgmt.model';
 
 
@@ -63,7 +63,11 @@ export class ProjectMGMTService {
 
   getUserList()
   {
-    this.http.get(this.rootURL + '/Users').toPromise().then(res => this.userList=res as Users[]);
+    const hdrs = new HttpHeaders();
+    hdrs.append('Access-Control-Allow-Headers', 'Content-Type');
+    hdrs.append('Access-Control-Allow-Methods', 'GET');
+    hdrs.append('Access-Control-Allow-Origin', '*');
+    this.http.get(this.rootURL + '/Users',{headers: hdrs}).toPromise().then(res => this.userList=res as Users[]);
   }
 
   getUser(id : number)
